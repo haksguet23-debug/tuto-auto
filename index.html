@@ -109,7 +109,7 @@
     <section class="card links" id="resultats" hidden>
       <h2 id="titreResultats">Résultats</h2>
       <a id="lienYoutube" target="_blank" rel="noopener">▶ Tutos vidéo (YouTube)</a>
-      <a id="lienSchema" target="_blank" rel="noopener">🧩 Schémas éclatés (images)</a>
+      <a id="lienSchema" target="_blank" rel="noopener">🧩 Schémas éclatés (PDF)</a>
       <a id="lienRef" target="_blank" rel="noopener">🔎 Référence exacte de la pièce</a>
     </section>
 
@@ -127,7 +127,7 @@
     function liensPour(texte) {
       return {
         youtube: 'https://www.youtube.com/results?search_query=' + enc(texte + ' tuto'),
-        schema: 'https://www.google.com/search?tbm=isch&q=' + enc(texte + ' schéma éclaté'),
+        schema: 'https://www.google.com/search?q=' + enc(texte + ' schéma éclaté filetype:pdf'),
         ref: 'https://www.google.com/search?q=' + enc(texte + ' référence pièce')
       };
     }
