@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1e88e5">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Tuto Auto</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+    header {
+      background: #1e88e5;
+      color: #fff;
+      padding: 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    main { max-width: 560px; margin: 0 auto; padding: 16px; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    }
+    h2 { margin: 0 0 12px; font-size: 1.1rem; }
+    label { display: block; font-size: .9rem; margin: 8px 0 4px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    button, .btn {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #1e88e5;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn.secondary { background: #43a047; }
+    .links a {
+      display: block;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      background: #e3f2fd;
+      color: #0d47a1;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .hint { font-size: .85rem; color: #666; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🔧 Tuto Auto</h1>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1. Recherche rapide</h2>
+      <input id="libre" type="text" placeholder="Ex : Clio 3 alternateur, Golf 7 vidange">
+      <button id="btnLibre">Chercher</button>
+    </section>
+
+    <section class="card">
+      <h2>2. Ta voiture</h2>
+      <label for="marque">Marque</label>
+      <input id="marque" type="text" list="marques" placeholder="Ex : Renault">
+      <datalist id="marques">
+        <option value="Renault"><option value="Peugeot"><option value="Citroën"><option value="Volkswagen"><option value="Toyota"><option value="Ford"><option value="Fiat"><option value="Opel"><option value="BMW"><option value="Mercedes"><option value="Audi"><option value="Dacia"><option value="Kia"><option value="Hyundai"><option value="Nissan">
+      </datalist>
+      <div class="row">
+        <div>
+          <label for="modele">Modèle</label>
+          <input id="modele" type="text" placeholder="Ex : Clio 3">
+        </div>
+        <div>
+          <label for="annee">Année</label>
+          <input id="annee" type="text" inputmode="numeric" placeholder="Ex : 2008">
+        </div>
+      </div>
+
+      <label for="piece">Pièce ou action</label>
+      <input id="piece" type="text" list="pieces" placeholder="Ex : alternateur, plaquettes de frein">
+      <datalist id="pieces">
+        <option value="alternateur"><option value="démarreur"><option value="plaquettes de frein"><option value="disques de frein"><option value="filtre à huile"><option value="vidange"><option value="bougies"><option value="courroie de distribution"><option value="pompe à eau"><option value="embrayage"><option value="amortisseurs"><option value="batterie"><option value="essuie-glace"><option value="radiateur"><option value="thermostat"><option value="pompe à essence"><option value="filtre à air"><option value="rotule de direction"><option value="roulement de roue">
+      </datalist>
+
+      <button id="btnVoiture">Voir les tutos et schémas</button>
+    </section>
+
+    <section class="card links" id="resultats" hidden>
+      <h2 id="titreResultats">Résultats</h2>
+      <a id="lienYoutube" target="_blank" rel="noopener">▶ Tutos vidéo (YouTube)</a>
+      <a id="lienSchema" target="_blank" rel="noopener">🧩 Schémas éclatés (images)</a>
+      <a id="lienRef" target="_blank" rel="noopener">🔎 Référence exacte de la pièce</a>
+    </section>
+
+    <section class="card">
+      <h2>3. Recherche par photo</h2>
+      <p class="hint">Prends en photo la pièce ou l'étiquette, puis ouvre Google Lens et envoie la photo : il reconnaît la pièce et trouve la référence.</p>
+      <a class="btn secondary" href="https://lens.google.com/" target="_blank" rel="noopener">📷 Ouvrir Google Lens</a>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const enc = (s) => encodeURIComponent(s.trim());
+
+    function liensPour(texte) {
+      return {
+        youtube: 'https://www.youtube.com/results?search_query=' + enc(texte + ' tuto'),
+        schema: 'https://www.google.com/search?tbm=isch&q=' + enc(texte + ' schéma éclaté'),
+        ref: 'https://www.google.com/search?q=' + enc(texte + ' référence pièce')
+      };
+    }
+
+    function afficher(titre, texte) {
+      const l = liensPour(texte);
+      $('titreResultats').textContent = titre;
+      $('lienYoutube').href = l.youtube;
+      $('lienSchema').href = l.schema;
+      $('lienRef').href = l.ref;
+      $('resultats').hidden = false;
+      $('resultats').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    $('btnLibre').addEventListener('click', () => {
+      const t = $('libre').value;
+      if (!t.trim()) { $('libre').focus(); return; }
+      afficher('Résultats : ' + t, t);
+    });
+
+    $('btnVoiture').addEventListener('click', () => {
+      const parties = [$('marque').value, $('modele').value, $('annee').value, $('piece').value]
+        .map(s => s.trim()).filter(Boolean);
+      if (parties.length === 0) { $('marque').focus(); return; }
+      afficher('Résultats : ' + parties.join(' '), parties.join(' '));
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
